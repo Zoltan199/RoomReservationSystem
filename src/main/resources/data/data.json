@@ -1,0 +1,60 @@
+{
+  "rooms": [
+    {
+      "id": 1,
+      "roomNumber": "101",
+      "capacity": 2,
+      "available": true
+    },
+    {
+      "id": 2,
+      "roomNumber": "202",
+      "capacity": 4,
+      "available": true
+    },
+    {
+      "id": 3,
+      "roomNumber": "303",
+      "capacity": 3,
+      "available": false
+    }
+  ],
+  "clients": [
+    {
+      "id": 1,
+      "name": "Juan",
+      "lastName": "Pérez",
+      "email": "juan@example.com"
+    },
+    {
+      "id": 2,
+      "name": "María",
+      "lastName": "Gómez",
+      "email": "maria@example.com"
+    },
+    {
+      "id": 3,
+      "name": "Carlos",
+      "lastName": "López",
+      "email": "carlos@example.com"
+    }
+  ],
+  "reservations": [
+    {
+      "id": 1,
+      "room": 1,
+      "client": 1,
+      "checkInDate": "2024-01-20",
+      "checkOutDate": "2024-01-25",
+      "cost": 500.00
+    },
+    {
+      "id": 2,
+      "room": 2,
+      "client": 2,
+      "checkInDate": "2024-02-15",
+      "checkOutDate": "2024-02-20",
+      "cost": 700.00
+    }
+  ]
+}

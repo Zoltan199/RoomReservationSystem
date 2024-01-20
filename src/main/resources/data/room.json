@@ -1,0 +1,21 @@
+
+  [
+    {
+      "id": 1,
+      "roomNumber": "101",
+      "capacity": 2,
+      "available": true
+    },
+    {
+      "id": 2,
+      "roomNumber": "202",
+      "capacity": 4,
+      "available": true
+    },
+    {
+      "id": 3,
+      "roomNumber": "303",
+      "capacity": 3,
+      "available": false
+    }
+  ]
