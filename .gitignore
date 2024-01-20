@@ -159,3 +159,7 @@ buildNumber.properties
 .idea
 .mvn
 
+node_modules
+
+
+

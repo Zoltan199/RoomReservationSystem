@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin
 @RestController //Definir la clase como controlador REST
 @RequestMapping("/api/reservations") //Ruta para las solicitudes
 public class ReservationController {

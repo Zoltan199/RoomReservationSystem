@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin
 @RestController //Definir la clase como controlador REST
 @RequestMapping("/api/rooms") //Ruta para las solicitudes
 public class RoomController {
     @Autowired //Inyectar la instancia RoomService
     private RoomService roomService;
+
 
     @GetMapping //Para manejar las solicitudes HTTP GET
     public ResponseEntity<List<Room>> getAllRooms() throws IOException{
