@@ -18,7 +18,7 @@ import java.util.List;
 public class RoomService {
     @Autowired
     private  RoomRepository roomRepository;
-    private final String filePath = "/resources/data/data.json"; //Ruta a la capa de datos
+    //private final String filePath = "/resources/data/data.json"; //Ruta a la capa de datos
     //private final ObjectMapper objectMapper = new ObjectMapper(); //Objeto de Jackson para convertir Java-JSON
 
 

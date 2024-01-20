@@ -1,5 +1,6 @@
 package com.example.ReservationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDate;
@@ -10,7 +11,11 @@ public class Reservation {
     private Long id;
     private Room room;
     private Client client;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkInDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkOutDate;
     private double cost;
 
