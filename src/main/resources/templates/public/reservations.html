@@ -10,79 +10,295 @@
 </head>
 
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <div id="app">
-        <v-app>
-            <v-main>
-                <v-container class="text-center mt-5">
-                    <v-row justify="center">
-                      <v-col cols="12" md="8">
-                        <v-card>
-                          <v-card-title class="headline">
-                            Consulta de reservaciones
-                          </v-card-title>
-            
-                          <v-card-text>
-                            <v-data-table :items="lista" :headers="headersReservations"></v-data-table>
-                          </v-card-text>
-            
-                          <v-card-actions class="justify-end mt-4">
-                            <v-btn @click="getReservationsById" >Buscar</v-btn>
-                            <v-btn @click="addReservation">Añadir </v-btn>
-                            <v-btn @click="actualizarReservacion">Actualizar </v-btn>
-                            <v-btn @click="eliminarReservacion">Eliminar </v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-            </v-main>
-        </v-app>
-        
-    </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <div id="app">
+      <v-app>
+        <v-main>
+          <v-container class="text-center mt-5" >
+              <v-row justify="center">
+                <v-col cols="12" md="8">
+                  <v-card>
+                    <v-card-title class="headline">Consulta de reservaciones</v-card-title>
+                    <v-card-text>
+                      <v-skeleton-loader v-if="loading" v-bind="attrs" :type="'table'" :row="5" :column="5"></v-skeleton-loader>
+                      <v-data-table v-bind:items="lista" :headers="headersReservations" v-if="!loading">
+                          <template v-slot:top>
+                              <v-toolbar flat>
+                                <v-spacer></v-spacer>
+                                <v-dialog v-model="dialog" max-width="500px">
+                                  <template v-slot:activator="{ on, attrs }">
+                                    <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+                                      Reservar
+                                    </v-btn>
+                                  </template>
+                                  <v-card>
+                                    <v-card-title>
+                                      <span class="text-h5">{{ formTitle }}</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                      <v-container>
+                                        <v-row>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="editedItem.room.id" label="Id de Habitación"></v-text-field>
+                                          </v-col>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="editedItem.client.id" label="Id de Cliente"></v-text-field>
+                                          </v-col>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="editedItem.cost" label="Costo"></v-text-field>
+                                          </v-col>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="editedItem.checkInDate" label="Check In"></v-text-field>
+                                          </v-col>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-text-field v-model="editedItem.checkOutDate" label="Check out"></v-text-field>
+                                          </v-col>
+                                          <!-- <v-col cols="12" sm="6" md="4">
+                                            <v-dialog ref="dialog" v-model="modal" return-value.sync="date" persistent width="290px">
+                                              <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field v-model="editedItem.checkInDate" label="Check In" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                              </template>
+                                              <v-date-picker v-model="date" scrollable>
+                                                <v-spacer></v-spacer>
+                                                <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                                <v-btn text color="primary" @click="$refs.dialog.save(editedItem.checkInDate)">OK</v-btn>
+                                              </v-date-picker>
+                                            </v-dialog>
+                                          </v-col>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-dialog ref="dialog" v-model="modal" return-value.sync="date" persistent width="290px">
+                                              <template v-slot:activator="{ on, attrs }">
+                                                <v-text-field v-model="editedItem.checkOutDate" label="Check Out" prepend-icon="mdi-calendar" readonly v-bind="attrs" v-on="on"></v-text-field>
+                                              </template>
+                                              <v-date-picker v-model="date" scrollable>
+                                                <v-spacer></v-spacer>
+                                                <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                                <v-btn text color="primary" @click="$refs.dialog.save(editedItem.checkOutDate)">OK</v-btn>
+                                              </v-date-picker>
+                                            </v-dialog>
+                                          </v-col> -->
+                                          <!-- <v-col cols="12" sm="6" md="4">
+                                            <v-date-picker v-model="date" no-title @input="menu2 = false" v-model="editedItem.checkInDate" label="Entrada"></v-date-picker>
+                                          </v-col>
+                                          <v-col cols="12" sm="6" md="4">
+                                            <v-date-picker v-model="editedItem.checkOutDate" label="Salida"></v-date-picker>
+                                          </v-col> -->
+                                        </v-row>
+                                      </v-container>
+                                    </v-card-text>
+                                    <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn color="blue darken-1" text @click="close">Cancelar</v-btn>
+                                      <v-btn color="blue darken-1" text @click="save"> Guardar</v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                                </v-dialog>
+                                <v-dialog v-model="dialogDelete" max-width="500px">
+                                  <v-card>
+                                    <v-card-title class="text-h5">¿Deseas eliminarlo de forma permanente?</v-card-title>
+                                    <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
+                                      <v-btn color="blue darken-1" text @click="deleteItemConfirm">Aceptar</v-btn>
+                                      <v-spacer></v-spacer>
+                                    </v-card-actions>
+                                  </v-card>
+                                </v-dialog>
+                              </v-toolbar>
+                            </template>
+                            <template v-slot:item.actions="{ item }">
+                              <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
+                              <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+                            </template>
+                      </v-data-table>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+      </v-main>
+      </v-app> 
+  </div>
 </body>
 
 <script>
-    var app = new Vue({
-        el:"#app",
-        vuetify: new Vuetify(),
-        data:{
-            lista: [],
-            headersReservations: [
-                { text: 'Identificador de reservacion', value: 'id' },
-                { text: 'Número de Habitacion', value: 'room.roomNumber'},
-                { text: 'Capacidad', value: 'room.capacity'},
-                { text: 'Nombre', value: 'client.name'},
-                { text: 'Apellido', value: 'client.lastName'},
-                { text: 'CheckIn', value: 'checkInDate' },
-                { text: 'CheckOut', value: 'checkOutDate' }
-            ]
-        },
-        methods: {
-            async getReservations(){
-             const respuesta = await fetch("http://localhost:8080/api/reservations", {
-                    method: "GET",
-                    /* mode: "no-cors",   */
-                    headers: {
-                        "Content-Type": "application/json",
-                        
-                    }
-                });
-             const data = await respuesta;
-             return data
-        }
-        },
+  var app = new Vue({
+    el:"#app",
+    vuetify: new Vuetify(),
+    data:{
+      date: (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false,
+      loading: true,
+      dialog: false,
+      dialogDelete: false,
+      editedIndex: -1,
+      editedItem: {
+          id: 0,
+          room: {id: 0,
+            roomNumber: '',
+            capacity: 0,
+            available: true
+          },
+          client: {id: 0,
+            name: '',
+            lastName: '',
+            email: ''
+          },
+          cost: 0,
+          checkInDate: '',
+          checkOutDate: ''
+      },
+      defaultItem: {
+          id: 0,
+          room: {id: 0,
+            roomNumber: '',
+            capacity: 0,
+            available: true
+          },
+          client: {id: 0,
+            name: '',
+            lastName: '',
+            email: ''
+          },
+          cost: 0,
+          checkInDate: '',
+          checkOutDate: ''
+      },
+      lista: [],
+      lista2: [],
+      headersReservations: [
+          { text: 'Id de reservación', value: 'id' },
+          { text: 'Id de habitación', value: 'room.id' },
+          { text: 'Id de cliente', value: 'client.id' },
+          { text: 'CheckIn', value: 'checkInDate' },
+          { text: 'CheckOut', value: 'checkOutDate'},
+          { text: 'Costo', value: 'cost'},
+          { text: 'Acciones', value: 'actions', sortable: false }
+      ]
+    },
 
-        
-        created(){
-            const exx = this.getReservations();
-            exx.then(response => response.json())
-            .then((data => {
-                this.lista=data;
-            }))
+    methods: {
+      getReservations(){
+        fetch("http://localhost:8080/api/reservations", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        }).then(respuesta => respuesta.json())
+        .then(data => {
+          this.lista = data;
+        });
+      },
+
+      editItem (item) {
+        this.editedIndex = this.lista.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+          /* this.editedIndex = this.lista.indexOf(item) */
+          this.editedItem = Object.assign({}, item)
+          this.dialogDelete = true
+      },
+
+      deleteItemConfirm () {
+        /* this.lista.splice(this.editedIndex, 1) */
+        let itemId = this.editedItem.id;
+        console.log(itemId);
+        fetch(`http://localhost:8080/api/reservations/${itemId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then(respuesta => respuesta.json())
+        .then(data => {
+          console.log(data);
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.closeDelete()
+        });
+      },
+
+      close () {
+        this.dialog = false
+        this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+        })
+      },
+
+      closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+        })
+      },
+
+      save () {
+        let esNuevo = this.editedItem.id === 0 ? true : false
+        if (esNuevo) {
+          let reservation = this.editedItem;
+          console.log(reservation);
+          fetch("http://localhost:8080/api/reservations", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(reservation)
+            }).then(respuesta => respuesta.json())
+            .then(data => {
+              console.log(data);
+              this.getReservations();
+              this.close()
+            });
+        } 
+        else {
+          let reservation = this.editedItem;
+          console.log(reservation);
+          let itemId = this.editedItem.id;
+          console.log('No es nuevo')
+          fetch(`http://localhost:8080/api/reservations/${itemId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(reservation)
+          }).then(respuesta => respuesta.json())
+          .then(data => {
+            console.log(data);
+            this.getReservations();
+            this.close();
+          });
         }
-    })
+      }
+    },
+
+    computed: {
+      formTitle () {
+        return this.editedIndex === -1 ? 'Reservar' : 'Editar reservación'
+      },
+    },
+
+    watch: {
+      dialog (val) {
+        val || this.close()
+      },
+      dialogDelete (val) {
+        val || this.closeDelete()
+      },
+    },
+  
+    created(){
+      setTimeout(() => {
+        this.loading = false;
+        this.getReservations();
+      }, 3000);
+    }  
+  })
 </script>
 </html>
